@@ -1,5 +1,6 @@
 #include <bits/stdc++.h>
 #include <windows.h>
+#include <conio.h>
 using namespace std;
 
 void display(char arr[10][10])
@@ -14,52 +15,112 @@ void display(char arr[10][10])
         cout << endl;
     }
 }
-
-void updateSnake(char arr[][10] , int &snakex , int &snakey , int &prevx , int &prevy) {
-    if(abs(snakey - prevy)) {
-        arr[snakey][snakex] = ' ' ;
+// snaky-prevY compare with x axis
+//  sub value 0 automatically dusre vale ko
+//! old function
+/* void updateSnake(char arr[][10] , int &snakeX , int &snakeY , int &prevX , int &prevY) {
+    if(abs(snakeY - prevY)) {
+        arr[snakeY][snakeX] = ' ' ;
         //means we have to change snakes location...
-        //assuming snake can move only in Y for now  
+        //assuming snake can move only in Y for now
         //if distance in Y is less , move closer in y direction...
-        
-        if(abs(snakey - prevy)!=0) {
-        
-        if(snakey > prevy) {
-            snakey-- ;
-            arr[snakey][snakex] = '~' ;
+
+        if(abs(snakeY - prevY)!=0) {
+
+        if(snakeY > prevY) {
+            snakeY-- ;
+            arr[snakeY][snakeX] = '~' ;
         }
         else {
-            snakey++ ;
-            arr[snakey][snakex] = '~' ;
+            snakeY++ ;
+            arr[snakeY][snakeX] = '~' ;
         }
-        
-        if(arr[prevy][prevx]=='~') {
+
+        if(arr[prevY][prevX]=='~') {
             cout << "You are Dead" << endl ;
             return ;
         }
     }
     }
-    
-        //distance in X is short 
-    //move snake horizontally 
+
+        //distance in X is short
+    //move snake horizontally
   else {
-     arr[snakey][snakex] = ' ' ;
-    if (snakex > prevx) {
-        snakex--;
+     arr[snakeY][snakeX] = ' ' ;
+    if (snakeX > prevX) {
+        snakeX--;
+        arr[snakeY][snakeX] = '~' ;
     } else {
-        snakex++;
+        snakeX++;
+        arr[snakeY][snakeX] = '~' ;
     }
 
-    if (prevx == snakex && prevy == snakey) {
+    if (prevX == snakeX && prevY == snakeY) {
         cout << "You are Dead" << endl;
         return;
-    } else {
-        arr[snakey][snakex] = '~';
     }
 }
+}*/
+//! new function
+void updateSnake(char arr[][10], int &snakeX, int &snakeY, int &prevX, int &prevY)
+{
+    int comp = (abs(snakeX - prevX) < abs(snakeY - prevY)) ? 1 : 0;
+    cout << "~" << snakeX << " " << snakeY << "." << comp << endl;
+    // getch();
+    // if (snakeX == prevX)
+    //     comp = 1;
+    // if (snakeY == prevY)
+    //     comp = 0;
+    if (comp)
+    {
+        arr[snakeY][snakeX] = ' ';
+        // means we have to change snakes location...
+        // assuming snake can move only in Y for now
+        // if distance in Y is less , move closer in y direction...
 
+        if (abs(snakeY - prevY) != 0)
+        {
+
+            if (snakeY > prevY)
+            {
+                snakeY--;
+                arr[snakeY][snakeX] = '~';
+            }
+            else
+            {
+                snakeY++;
+                arr[snakeY][snakeX] = '~';
+            }
+        }
+        else
+        {
+            // cout << "you are dead";
+            return;
+        }
+    }
+
+    // distance in X is short
+    // move snake horizontally
+    else
+    {
+        arr[snakeY][snakeX] = ' ';
+        if (snakeX > prevX)
+        {
+            snakeX--;
+            arr[snakeY][snakeX] = '~';
+        }
+        else
+        {
+            snakeX++;
+            arr[snakeY][snakeX] = '~';
+        }
+    }
+    if (prevX == snakeX && prevY == snakeY)
+    {
+        // cout << "You are dead" << endl;
+        return;
+    }
 }
-
 int main()
 {
     char arr[10][10];
@@ -67,132 +128,165 @@ int main()
     {
         for (int j = 0; j < 10; j++)
         {
-            if(i==0 || i==9) {
-                arr[i][j]='-' ;
+            if (i == 0 || i == 9)
+            {
+                arr[i][j] = '-';
             }
-            
-            else if(j==0 || j==9) {
-                arr[i][j] = '|' ;
+
+            else if (j == 0 || j == 9)
+            {
+                arr[i][j] = '|';
             }
-            else {
-                arr[i][j]= ' ' ;
+            else
+            {
+                arr[i][j] = ' ';
             }
         }
     }
 
-    int prevx = 1, prevy = 1;
-    arr[prevy][prevx] = '>';
+    int prevX = 1, prevY = 1;
+    arr[prevY][prevX] = '>';
 
-    int snakex = 6, snakey = 1;
-    arr[snakey][snakex] = '~';
+    int snakeX = 6, snakeY = 1;
+    arr[snakeY][snakeX] = '~';
 
     // display(arr) ;
-    
+
     while (true)
     {
-        int goalx = 7 , goaly = 7 ;
-        arr[goaly][goalx] = '@' ;
+        // cout << prevY << " " << prevX << endl;
+        int goalx = 7, goaly = 7;
+        arr[goaly][goalx] = '@';
         char ch;
         cin >> ch;
 
         if (ch == 'S' || ch == 's')
         {
-            arr[prevy][prevx] = ' ';
-            if (prevy < 8)
+            if (prevY < 8)
             {
-                prevy++;
-                
-                if(prevx == goalx && prevy==goaly) {
-                    cout << "You WIN" << endl ;
-                    break ;
+                arr[prevY][prevX] = ' ';
+                prevY++;
+
+                if (prevX == goalx && prevY == goaly)
+                {
+                    cout << "You WIN" << endl;
+                    break;
                 }
-                
-                if (prevx == snakex && prevy == snakey)
+
+                if (prevX == snakeX && prevY == snakeY)
                 {
                     cout << "You are dead";
                     break;
                 }
-                else {
-                    arr[prevy][prevx] = 'v';
-                    updateSnake(arr ,snakex , snakey , prevx , prevy) ;
-                    // updateSnake(arr, snakex, snakey, prevx, prevy, goalx, goaly);
-
+                else
+                {
+                    arr[prevY][prevX] = 'v';
+                    updateSnake(arr, snakeX, snakeY, prevX, prevY);
+                    // updateSnake(arr, snakeX, snakeY, prevX, prevY, goalx, goaly);
                 }
             }
-            
+            else
+                updateSnake(arr, snakeX, snakeY, prevX, prevY);
+            if (prevX == snakeX && prevY == snakeY)
+            {
+                cout << "You are Dead";
+                return 0;
+            }
         }
 
         else if (ch == 'W' || ch == 'w')
         {
-            arr[prevy][prevx] = ' ';
-            if (prevy > 1)
+            if (prevY > 1)
             {
-                prevy--;
-                if(prevx == goalx && prevy==goaly) {
-                    cout << "You WIN" << endl ;
-                    break ;
-                }
-                if (prevx == snakex && prevy == snakey)
+                arr[prevY][prevX] = ' ';
+                prevY--;
+                if (prevX == goalx && prevY == goaly)
                 {
-                    cout << "You are dead";
+                    cout << "You WIN" << endl;
                     break;
                 }
-                else {
-                    arr[prevy][prevx] = '^';
-                    updateSnake(arr ,snakex , snakey , prevx , prevy) ;
-                    // updateSnake(arr, snakex, snakey, prevx, prevy, goalx, goaly);
-
+                if (prevX == snakeX && prevY == snakeY)
+                {
+                    cout << "u are dead";
+                    break;
                 }
+                else
+                {
+                    arr[prevY][prevX] = '^';
+                    updateSnake(arr, snakeX, snakeY, prevX, prevY);
+                    // updateSnake(arr, snakeX, snakeY, prevX, prevY, goalx, goaly);
+                }
+            }
+            else
+                updateSnake(arr, snakeX, snakeY, prevX, prevY);
+            if (prevX == snakeX && prevY == snakeY)
+            {
+                cout << "You are Dead";
+                return 0;
             }
         }
 
         else if (ch == 'A' || ch == 'a')
         {
-            arr[prevy][prevx] = ' ';
-            if (prevx > 1)
+            if (prevX > 1)
             {
-                prevx--;
-                if(prevx == goalx && prevy==goaly) {
-                    cout << "You WIN" << endl ;
-                    break ;
+                arr[prevY][prevX] = ' ';
+                prevX--;
+                if (prevX == goalx && prevY == goaly)
+                {
+                    cout << "You WIN" << endl;
+                    break;
                 }
-                if (prevx == snakex && prevy == snakey)
+                if (prevX == snakeX && prevY == snakeY)
                 {
                     cout << "You are dead";
                     break;
                 }
-                else {
-                    arr[prevy][prevx] = '<';
-                    updateSnake(arr ,snakex , snakey , prevx , prevy) ;
-                    // updateSnake(arr, snakex, snakey, prevx, prevy, goalx, goaly);
-
+                else
+                {
+                    arr[prevY][prevX] = '<';
+                    updateSnake(arr, snakeX, snakeY, prevX, prevY);
+                    // updateSnake(arr, snakeX, snakeY, prevX, prevY, goalx, goaly);
                 }
-                
+            }
+            else
+                updateSnake(arr, snakeX, snakeY, prevX, prevY);
+            if (prevX == snakeX && prevY == snakeY)
+            {
+                cout << "You are Dead";
+                return 0;
             }
         }
 
         else if (ch == 'D' || ch == 'd')
         {
-            arr[prevy][prevx] = ' ';
-            if (prevx < 8)
+            if (prevX < 8)
             {
-                prevx++;
-                if(prevx == goalx && prevy==goaly) {
-                    cout << "You WIN" << endl ;
-                    break ;
+                arr[prevY][prevX] = ' ';
+                prevX++;
+                if (prevX == goalx && prevY == goaly)
+                {
+                    cout << "You WIN" << endl;
+                    break;
                 }
-                if (prevx == snakex && prevy == snakey)
+                if (prevX == snakeX && prevY == snakeY)
                 {
                     cout << "You are dead";
                     break;
                 }
-                else {
-                     arr[prevy][prevx] = '>';
-                    updateSnake(arr ,snakex , snakey , prevx , prevy) ;
-                    // updateSnake(arr, snakex, snakey, prevx, prevy, goalx, goaly);
-
+                else
+                {
+                    arr[prevY][prevX] = '>';
+                    updateSnake(arr, snakeX, snakeY, prevX, prevY);
+                    // updateSnake(arr, snakeX, snakeY, prevX, prevY, goalx, goaly);
                 }
-               
+            }
+            else
+                updateSnake(arr, snakeX, snakeY, prevX, prevY);
+            if (prevX == snakeX && prevY == snakeY)
+            {
+                cout << "You are Dead";
+                return 0;
             }
         }
 
@@ -201,8 +295,19 @@ int main()
             cout << "exited" << endl;
             break;
         }
-
         display(arr);
+        cout << ">" << prevY << " " << prevX << endl;
     }
 }
-
+/*
+this
+code
+is
+written
+by
+Abhimanyu
+Kumar
+Jha
+And
+Abhishek
+Gupta*/
